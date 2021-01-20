@@ -16,3 +16,7 @@ __pycache__
 *.dvi
 *.log
 *.out.ps
+
+# Jupyter random files
+*.DS_Store
+*.ipynb_checkpoints/
