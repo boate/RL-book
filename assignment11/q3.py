@@ -1,8 +1,7 @@
 from q1and2 import mc_tabular, weight_func, td_tabular
-from rl.chapter2.simple_inventory_mrp import InventoryState, SimpleInventoryMRPFinite
-from rl.distribution import SampledDistribution, Categorical, Choose
-from rl.function_approx import FunctionApprox, Tabular
-from rl.markov_process import TransitionStep
+from rl.chapter2.simple_inventory_mrp import SimpleInventoryMRPFinite
+from rl.distribution import Choose
+from rl.function_approx import Tabular
 from rl.monte_carlo import mc_prediction
 from rl.td import td_prediction
 from pprint import pprint
