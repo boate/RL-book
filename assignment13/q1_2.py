@@ -57,6 +57,42 @@ def TabularSarsa(non_terminal_states: Sequence[S],
 
         yield q
 
+# pretty similar to tabular SARSA
+def TabularQLearning(non_terminal_states: Sequence[S],
+        q: Dict[S, Dict[A, float]],
+        transition_map:  StateActionMapping[S, int],
+        gamma: float,
+        start_state: S,
+        num_episodes = 1000,
+        tolerance = 1e-6
+        ) -> Iterator[Dict[S, Dict[A, float]]]:
+
+    k = 1.0
+    for episode in range(num_episodes):
+        counter: Dict[S, float] = {}
+        # start at a random state?
+        state = start_state
+        epsilon = 1.0 / k
+        # until state is terminal
+        iter = 0
+        while iter < 1000:
+            k += 1
+            iter += 1
+            epsilon = 1.0/k
+            action = epsilon_greedy(epsilon, q, state)
+            nxtstate, reward = transition_map[state][action].sample()
+            nxtaction = max(q[nxtstate], key=q[nxtstate].get)
+
+            # weighting
+            if state in counter:
+                counter[state] += 1.0
+            else:
+                counter[state] = 1.0
+            weight = 1.0/counter[state]
+            q[state][action] += weight*(reward + gamma*q[nxtstate][nxtaction] - q[state][action])
+            state = nxtstate
+
+        yield q
 if __name__ == '__main__':
     user_capacity = 2
     user_poisson_lambda = 1.0
@@ -79,6 +115,21 @@ if __name__ == '__main__':
     pprint(opt_vf_vi)
     print(opt_policy_vi)
     print()
+
+    print("Tabular Q Learning")
+    print("--------------")
+    actions = {s: list(si_mdp.actions(s)) for s in si_mdp.non_terminal_states}
+    tabq = TabularQLearning(si_mdp.non_terminal_states,
+        {s: {a: 0 for a in actions[s]} for s in si_mdp.non_terminal_states},
+        si_mdp.get_action_transition_reward_map(),
+        user_gamma,
+        InventoryState(0,0),
+        num_episodes = 2000)
+    result = get_last_vf(tabq, 1999)
+    print("Optimal Policy")
+    pprint({s: max(result[s]) for s in si_mdp.non_terminal_states})
+    print("Optimal Value Function")
+    pprint({s: max(result[s].values()) for s in si_mdp.non_terminal_states})
 
     print("Tabular SARSA")
     print("--------------")
