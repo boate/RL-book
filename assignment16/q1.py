@@ -1,12 +1,8 @@
 from rl.chapter7.asset_alloc_discrete import AssetAllocDiscrete
-from dataclasses import dataclass
-from typing import Sequence, Callable, Tuple, Iterator, TypeVar, Optional
-from rl.distribution import Distribution, SampledDistribution, Choose, Gaussian, Categorical
-from rl.markov_decision_process import MarkovDecisionProcess, Policy
-from rl.function_approx import DNNSpec, AdamGradient, DNNApprox
-from rl.approximate_dynamic_programming import back_opt_vf_and_policy
-from rl.approximate_dynamic_programming import back_opt_qvf
-from operator import itemgetter
+from typing import Sequence, Callable, Tuple, TypeVar, Optional
+from rl.distribution import Gaussian, Categorical
+from rl.markov_decision_process import Policy
+from rl.function_approx import DNNSpec
 import numpy as np
 
 S = TypeVar('S')
